@@ -107,6 +107,7 @@ body{
 }
 .dropdown-item:hover{
   background-color: slategray;
+  cursor: pointer;
 }
 
 .button{
@@ -123,6 +124,19 @@ body{
 }
 .button-active{
   visibility: visible;
+}
+.input{
+  line-height: 1.5;
+  font-size: 1rem;
+  background-color: #fff;
+  border: none;
+  border-radius: 2px;
+  box-sizing: border-box;
+  cursor: default;
+  outline: none;
+  padding: 8px 52px 8px 10px;
+  transition: all 200ms ease;
+  width: 100%;
 }
 
 @keyframes expand {
