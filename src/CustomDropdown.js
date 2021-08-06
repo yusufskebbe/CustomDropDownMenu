@@ -1,8 +1,11 @@
-import React, { useEffect, /*useRef*/ useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import classnames from 'classnames';
 
-import onClickOutside from 'react-onclickoutside';
+
+import useOnClickOutside from './hooks/useOnClickOutside';
+
+//import onClickOutside from 'react-onclickoutside';
 
 
 
@@ -11,14 +14,22 @@ function CustomDropdown({ title, options, values, onChange }) {
 
 
   const [isActive, setIsactive] = useState(false)
+  const [text, setText] = useState("");
 
-  //const ref = useRef(null);
+  const dropdownRef = useRef(null);
 
-  CustomDropdown.handleClickOutside = () => setIsactive(false);
+  useOnClickOutside(dropdownRef, handleClose)
 
-  const applyChanges = (newItem) => {
+  //CustomDropdown.handleClickOutside = () => setIsactive(false);
 
-    onChange && onChange([...values, newItem])   // && bu eğer varsa devam eder  
+  function handleClose() {
+    setIsactive(false);
+
+  }
+
+  const applyChanges = (newItemId) => {
+
+    onChange && onChange([...values, newItemId - 1])   // && bu eğer varsa devam eder  
 
   }
 
@@ -41,18 +52,12 @@ function CustomDropdown({ title, options, values, onChange }) {
 
     }
   };
+  function filter(options) {
 
+    return options.filter(option => option.title.toLowerCase().indexOf(text.toLowerCase()) > -1)
 
-  // useEffect(() => {
-  //   document.addEventListener("click", toggle)
-  //   return () => document.removeEventListener("click", toggle)
-  // }, [])
+  }
 
-  // function toggle(e) {
-  //   console.dir([e.target, ref.current]);
-  //   setIsactive(e && e.target === ref.current);
-
-  // }
 
 
 
@@ -62,18 +67,20 @@ function CustomDropdown({ title, options, values, onChange }) {
       <div className="dropdown-input">
         <span onClick={() => setIsactive(!isActive)} className="arrow-down"></span>
         <div className="dropdown-values">
+          <input className="input" placeholder={" Type..."} onChange={(e) => { setText(e.target.value) }} onClick={() => setIsactive(!isActive)} ></input>
           {
             values.length ? values.map(value => <div key={value} className="dropdown-value">
-              {options[value].title} <span onClick={() => { removeValue(value) }} className="dropdown-remove">X</span>
-            </div>) : <div className="dropdown-placeholder">Select an item</div>
+              {options[value].title}
+              <span onClick={() => { removeValue(value) }} className="dropdown-remove">X</span>
+            </div>) : null
 
           }
 
         </div>
       </div>
 
-      <div className={classnames('dropdown-options', { 'dropdown-active': isActive })}> {/* buarad isActive olursa dropdwon-active classname devreye girecek  */}
-        {options.filter(i => values.findIndex(value => value === i.id) === -1).map(option => <div onKeyPress={(e) => e.key === 'Enter' && listener(e)} onClick={() => { applyChanges(option.id) }} key={option.id} className="dropdown-item">{option.title}
+      <div ref={dropdownRef} className={classnames('dropdown-options', { 'dropdown-active': isActive })}> {/* buarad isActive olursa dropdwon-active classname devreye girecek  */}
+        {filter(options).filter(i => values.findIndex(value => value === i.id - 1) === -1).map(option => <div onKeyPress={(e) => e.key === 'Enter' && listener(e)} onClick={() => { applyChanges(option.id) }} key={option.id} className="dropdown-item">{option.title}
 
         </div>)}
 
@@ -83,9 +90,10 @@ function CustomDropdown({ title, options, values, onChange }) {
   )
 }
 
-const ClickOutsideConfig = {
-  handleClickOutside: () => CustomDropdown.handleClickOutside,
+/*const ClickOutsideConfig = {
+ handleClickOutside: () => CustomDropdown.handleClickOutside,
 };
+*/
 
-export default onClickOutside(CustomDropdown, ClickOutsideConfig); // high order componenet 
+export default CustomDropdown; // high order componenet 
 
