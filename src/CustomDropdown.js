@@ -10,7 +10,7 @@ import useOnClickOutside from './hooks/useOnClickOutside';
 
 
 
-function CustomDropdown({ title, options, values, onChange }) {
+function CustomDropdown({ title, options, values, onChange, role }) {
 
 
   const [isActive, setIsactive] = useState(false)
@@ -62,16 +62,16 @@ function CustomDropdown({ title, options, values, onChange }) {
 
 
   return (
-    <div className="dropdown-container">
-      <label>{title}</label>
+    <div role={role} className="dropdown-container">
+      <label data-testid="Data">{title}</label>
       <div className="dropdown-input">
-        <span onClick={() => setIsactive(!isActive)} className="arrow-down"></span>
+        <span title="arrow" onClick={() => setIsactive(!isActive)} className="arrow-down"></span>
         <div className="dropdown-values">
-          <input className="input" placeholder={" Type..."} onChange={(e) => { setText(e.target.value) }} onClick={() => setIsactive(!isActive)} ></input>
+          <input className="input" placeholder="Type" onChange={(e) => { setText(e.target.value) }} onClick={() => setIsactive(!isActive)} ></input>
           {
             values.length ? values.map(value => <div key={value} className="dropdown-value">
               {options[value].title}
-              <span onClick={() => { removeValue(value) }} className="dropdown-remove">X</span>
+              <span onClick={() => { removeValue(value) }} onKeyPress={() => { setIsactive(false) }} className="dropdown-remove">X</span>
             </div>) : null
 
           }
@@ -85,7 +85,7 @@ function CustomDropdown({ title, options, values, onChange }) {
         </div>)}
 
       </div>
-      <button className={classnames('button', { 'button-active': values.length })} onClick={() => { console.log(values) }} type="submit">Submit</button>
+      {Boolean(values.length) && <button role="button" className="button" onClick={() => { console.log(values) }} type="submit">Submit</button>}
     </div>
   )
 }

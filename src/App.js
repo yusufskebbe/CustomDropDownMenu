@@ -9,6 +9,7 @@ function App() {
   const [selectedPosts, setSelectedPosts] = useState([]);
   const [posts, setPosts] = useState([]);
 
+
   useEffect(() => {
 
     axios.get('https://jsonplaceholder.typicode.com/posts').then((res) => {
@@ -20,8 +21,9 @@ function App() {
 
   return (
     <div className="App">
-      <h3>Custom Dropdown</h3>
-      <CustomDropdown title="Data" values={selectedPosts} onChange={(v) => setSelectedPosts(v)} options={posts} />
+      <h3 title="Custom Dropdown">Custom Dropdown</h3>
+
+      <CustomDropdown role="combobox" title="Data" values={selectedPosts} onChange={(v) => setSelectedPosts(v)} options={posts} />
     </div>
   );
 }
